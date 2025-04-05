@@ -6,6 +6,20 @@ const API_KEY = "apikey-kamu";
 
 app.use(express.json());
 
+app.get('/data', (req, res) => {
+    const key = req.headers['x-api-key'];
+    if (key !== API_KEY) {
+        return res.status(403).json({ message: 'API Key tidak valid' });
+    }
+
+    if (!fs.existsSync('data.json')) {
+        return res.status(404).json({ message: 'Data belum tersedia' });
+    }
+
+    const data = JSON.parse(fs.readFileSync('data.json'));
+    res.json(data);
+});
+
 app.post('/tambah-data', (req, res) => {
     const key = req.headers['x-api-key'];
     if (key !== 'kucinghitam') {
