@@ -2,16 +2,11 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_KEY = "apikey-kamu";
+const API_KEY = "bebas";
 
 app.use(express.json());
 
-app.get('/data', (req, res) => {
-    const key = req.headers['x-api-key'];
-    if (key !== API_KEY) {
-        return res.status(403).json({ message: 'API Key tidak valid' });
-    }
-
+app.get('/', (req, res) => {
     if (!fs.existsSync('data.json')) {
         return res.status(404).json({ message: 'Data belum tersedia' });
     }
@@ -22,17 +17,17 @@ app.get('/data', (req, res) => {
 
 app.post('/tambah-data', (req, res) => {
     const key = req.headers['x-api-key'];
-    if (key !== 'kucinghitam') {
+    if (key !== API_KEY) {
         return res.status(403).json({ message: 'API Key tidak valid' });
     }
 
-    const { username, password, nomor_bot, nomor_owner, nama_owner, IP } = req.body;
+    const { number, username, password, access, my } = req.body;
 
-    if (!username || !password || !nomor_bot || !nomor_owner || !nama_owner || !IP) {
+    if (!number || !username || !password || !access || !my) {
         return res.status(400).json({ message: 'Data tidak lengkap' });
     }
 
-    const dataBaru = { username, password, nomor_bot, nomor_owner, nama_owner, IP };
+    const dataBaru = { number, username, password, access, my };
 
     let data = [];
     if (fs.existsSync('data.json')) {
